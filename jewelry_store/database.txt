@@ -1,0 +1,68 @@
+-- Table: users
+CREATE TABLE users (
+    id INT(11) PRIMARY KEY,
+    username VARCHAR(50) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(20),
+    email VARCHAR(100) NOT NULL UNIQUE,
+    phone VARCHAR(20)
+);
+
+-- Table: products
+CREATE TABLE products (
+    id INT(11) PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    image VARCHAR(255),
+    description TEXT,
+    category VARCHAR(100),
+    origin VARCHAR(255),
+    weight VARCHAR(255),
+    category_id INT(11),
+    sold_count INT(11) DEFAULT 0
+);
+
+-- Table: orders
+CREATE TABLE orders (
+    id INT(11) PRIMARY KEY,
+    user_id INT(11) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    phone VARCHAR(20) NOT NULL,
+    address TEXT NOT NULL,
+    note TEXT,
+    payment_method VARCHAR(50),
+    created_at DATETIME NOT NULL,
+    total DECIMAL(10,2) NOT NULL,
+    discount DOUBLE,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+-- Table: order_details
+CREATE TABLE order_details (
+    id INT(11) PRIMARY KEY,
+    order_id INT(11) NOT NULL,
+    product_id INT(11) NOT NULL,
+    quantity INT(11) NOT NULL,
+    price DOUBLE NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);
+
+-- Table: cart
+CREATE TABLE cart (
+    id INT(11) PRIMARY KEY,
+    user_id INT(11) NOT NULL,
+    product_id INT(11) NOT NULL,
+    quantity INT(11) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);
+
+-- Table: coupons
+CREATE TABLE coupons (
+    id INT(11) PRIMARY KEY,
+    code VARCHAR(50) NOT NULL UNIQUE,
+    type ENUM('percent', 'fixed') NOT NULL,
+    value DOUBLE NOT NULL,
+    expired_at DATE NOT NULL
+);
